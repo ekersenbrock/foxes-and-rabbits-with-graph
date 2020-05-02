@@ -26,7 +26,7 @@ public class Simulator
     // The probability that a cat will be created in any given grid position.
     private static final double CAT_CREATION_PROBABILITY = 0.01;
     // Decide if cats are included in the simulation.
-    private final boolean withCats = true;
+    private final boolean withCats = false;
 
     // List of animals in the field.
     private List<Animal> animals;
@@ -67,13 +67,17 @@ public class Simulator
         SimulatorView view = new GridView(depth, width);
         view.setColor(Rabbit.class, Color.ORANGE);
         view.setColor(Fox.class, Color.BLUE);
-        view.setColor(Cat.class, Color.RED);
+        if (withCats){
+            view.setColor(Cat.class, Color.RED);
+        }
         views.add(view);
         
         view = new GraphView(500, 150, 500);
         view.setColor(Rabbit.class, Color.BLACK);
         view.setColor(Fox.class, Color.RED);
-        view.setColor(Cat.class, Color.YELLOW);
+        if (withCats){
+            view.setColor(Cat.class, Color.YELLOW);
+        }
         views.add(view);
 
         // Setup a valid starting point.

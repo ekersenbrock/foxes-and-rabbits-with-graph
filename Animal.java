@@ -133,10 +133,14 @@ public abstract class Animal
         this.age = age;
     }
     
+    /**
+     * Returns the max age of this animal.
+     * @return The max age of the animal.
+     */
     abstract protected int getMaxAge();
     
     /**
-     * Increase the age. This could result in the fox's death.
+     * Increase the age. This could result in the animal's death.
      */
     protected void incrementAge() 
     {
@@ -160,26 +164,43 @@ public abstract class Animal
         return births;
     }
     
+    /**
+     * Return the breeding probability of this animal.
+     * @return The breeding probability of the animal.
+     */
     protected abstract double getBreedingProbability();
     
+    /**
+     * Returns the maximum number of offspring this animal can have.
+     * @return The max number of offspring.
+     */
     protected abstract int getMaxLitterSize();
     
     /**
-     * Check whether or not this fox is to give birth at this step.
+     * Check whether or not this animal is to give birth at this step.
      * New births will be made into free adjacent locations.
-     * @param newFoxes A list to return newly born foxes.
+     * @param newanimales A list to return newly born animals.
      */
-    protected void giveBirth(List<Animal> newFoxes, Animal thisAnimal)
+    protected void giveBirth(List<Animal> newAnimals)
     {
-        // New foxes are born into adjacent locations.
+        // New animales are born into adjacent locations.
         // Get a list of adjacent free locations.
         Field field = getField();
         List<Location> free = field.getFreeAdjacentLocations(getLocation());
         int births = breed();
         for(int b = 0; b < births && free.size() > 0; b++) {
             Location loc = free.remove(0);
-            Animal young = this(false, field, loc);
-            newFoxes.add(young);
+            Animal young = newAnimal(false, field, loc);
+            newAnimals.add(young);
         }
     }
+    
+    /**
+     * Returns a new animal.
+     * @param randomAge Decide of the animal is at the beginning of life.
+     * @param field The field the animal is in.
+     * @param loc The location of the animal in the field.
+     * @return The new animal.
+     */
+    protected abstract Animal newAnimal(Boolean randomAge,Field field, Location loc);
 }

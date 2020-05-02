@@ -147,4 +147,15 @@ public class Cat extends Animal
     protected int getMaxLitterSize(){
         return MAX_LITTER_SIZE;
     }
+    
+    /**
+     * Returns a new cat.
+     * @param randomAge Decide of the cat is at the beginning of life.
+     * @param field The field the cat is in.
+     * @param loc The location of the cat in the field.
+     * @return The new cat.
+     */
+    protected Cat newAnimal(Boolean randomAge,Field field, Location loc){
+        return new Cat(false, field, loc);
+    }
 }

@@ -118,42 +118,56 @@ public class Fox extends Animal
         return null;
     }
     
+    // /**
+     // * Check whether or not this fox is to give birth at this step.
+     // * New births will be made into free adjacent locations.
+     // * @param newFoxes A list to return newly born foxes.
+     // */
+    // protected void giveBirth(List<Animal> newFoxes)
+    // {
+        // // New foxes are born into adjacent locations.
+        // // Get a list of adjacent free locations.
+        // // Field field = getField();
+        // // List<Location> free = field.getFreeAdjacentLocations(getLocation());
+        // // int births = breed();
+        // // for(int b = 0; b < births && free.size() > 0; b++) {
+            // // Location loc = free.remove(0);
+            // // Fox young = new Fox(false, field, loc);
+            // // newFoxes.add(young);
+        // // }
+    // }
+    
     /**
-     * Check whether or not this fox is to give birth at this step.
-     * New births will be made into free adjacent locations.
-     * @param newFoxes A list to return newly born foxes.
+     * Returns a new fox.
+     * @param randomAge Decide of the fox is at the beginning of life.
+     * @param field The field the fox is in.
+     * @param loc The location of the fox in the field.
+     * @return The new fox.
      */
-    protected void giveBirth(List<Animal> newFoxes)
-    {
-        Fox young = new Fox(false, field.getField(), loc);
-        super.giveBirth(newFoxes,young);
-        // New foxes are born into adjacent locations.
-        // Get a list of adjacent free locations.
-        // Field field = getField();
-        // List<Location> free = field.getFreeAdjacentLocations(getLocation());
-        // int births = breed();
-        // for(int b = 0; b < births && free.size() > 0; b++) {
-            // Location loc = free.remove(0);
-            // Fox young = new Fox(false, field, loc);
-            // newFoxes.add(young);
-        // }
+    protected Fox newAnimal(Boolean randomAge,Field field, Location loc){
+        return new Fox(false, field, loc);
     }
     
     /**
-     * Get this type of animal with null fields?
+     * Returns the max age of this animal.
+     * @return The max age of the animal.
      */
-    protected Animal getThisAnimal(){
-        return new Fox(false, null, null);
-    }
-    
     protected int getMaxAge(){
         return MAX_AGE;
     }
     
+    /**
+     * Return the breeding probability of this animal.
+     * @return The breeding probability of the animal.
+     */
     protected double getBreedingProbability(){
         return BREEDING_PROBABILITY;
     }
     
+    /**
+     * Returns the maximum number of offspring this animal can have.
+     * @return The max number of offspring.
+     */
     protected int getMaxLitterSize(){
         return MAX_LITTER_SIZE;
     }
