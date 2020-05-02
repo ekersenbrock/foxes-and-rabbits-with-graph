@@ -58,7 +58,7 @@ public class Cat extends Animal
      * @param field The field currently occupied.
      * @param newCats A list to return newly born cats.
      */
-    protected void act(List<Animal> newCats)
+    public void act(List<Actor> newCats) 
     {
         incrementAge();
         incrementHunger();
@@ -122,7 +122,7 @@ public class Cat extends Animal
      * New births will be made into free adjacent locations.
      * @param newCats A list to return newly born cats.
      */
-    protected void giveBirth(List<Animal> newCats)
+    protected void giveBirth(List<Actor> newCats)
     {
         // New cats are born into adjacent locations.
         // Get a list of adjacent free locations.

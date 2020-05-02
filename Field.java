@@ -185,6 +185,17 @@ public class Field
         }
         return locations;
     }
+    
+    /**
+     * Return a radom location in field.
+     * @return Random location in field.
+     */
+    public Location getRandomLocation(){
+        int row = rand.nextInt(1 + getDepth());
+        int col = rand.nextInt(1 + getWidth());
+        Location location = new Location(row, col);
+        return location;
+    }
 
     /**
      * Return the depth of the field.

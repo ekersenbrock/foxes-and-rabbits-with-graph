@@ -43,11 +43,11 @@ public class Rabbit extends Animal
      * around. Sometimes it will breed or die of old age.
      * @param newRabbits A list to return newly born rabbits.
      */
-    protected void act(List<Animal> newRabbits)
+    public void act(List<Actor> newRabbits) 
     {
         incrementAge();
         if(isAlive()) {
-            giveBirth(newRabbits);            
+            giveBirth(newRabbits);              
             // Try to move into a free location.
             Location newLocation = getField().freeAdjacentLocation(getLocation());
             if(newLocation != null) {

@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=Actor
+comment0.text=\r\n\ The\ actor\ class\ is\ a\ super\ class\ for\ all\ variables\ in\ the\ field\ including\ \r\n\ the\ abstract\ class\ Animal\ and\ its\ concrete\ subclasses.\ \r\n\r\n\ @author\ Erik\ k\ \ \ \r\n\ @version\ 5/1/2020\r\n
+comment1.params=newActors
+comment1.target=void\ act(java.util.List)
+comment1.text=\r\n\ Puts\ the\ object\ into\ action,\ whatever\ the\ action\ may\ be\ for\ the\ object.\r\n\ @param\ newActors\ A\ list\ to\ recieve\ new\ actor\ objects.\r\n
+comment2.params=
+comment2.target=boolean\ isActive()
+comment2.text=\r\n\ Returns\ a\ boolean\ value\ to\ find\ out\ if\ the\ object\ is\ till\ active.\r\n\ @return\ Is\ this\ thing\ still\ doing\ stuff\r\n
+comment3.params=
+comment3.target=void\ setDead()
+comment3.text=\r\n\ Kills\ the\ thing.\r\n
+numComments=4

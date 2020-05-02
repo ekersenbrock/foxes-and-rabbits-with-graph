@@ -7,7 +7,7 @@ import java.util.Random;
  * @author David J. Barnes and Michael Kölling
  * @version 2016.03.18
  */
-public abstract class Animal
+public abstract class Animal implements Actor
 {
     // Whether the animal is alive or not.
     private boolean alive;
@@ -41,13 +41,6 @@ public abstract class Animal
     }
     
     /**
-     * Make this animal act - that is: make it do
-     * whatever it wants/needs to do.
-     * @param newAnimals A list to receive newly born animals.
-     */
-    abstract protected void act(List<Animal> newAnimals);
-
-    /**
      * Check whether the animal is alive or not.
      * @return true if the animal is still alive.
      */
@@ -60,7 +53,7 @@ public abstract class Animal
      * Indicate that the animal is no longer alive.
      * It is removed from the field.
      */
-    protected void setDead()
+    public void setDead()
     {
         alive = false;
         if(location != null) {
@@ -181,7 +174,7 @@ public abstract class Animal
      * New births will be made into free adjacent locations.
      * @param newanimales A list to return newly born animals.
      */
-    protected void giveBirth(List<Animal> newAnimals)
+    protected void giveBirth(List<Actor> newAnimals)
     {
         // New animales are born into adjacent locations.
         // Get a list of adjacent free locations.
@@ -202,5 +195,13 @@ public abstract class Animal
      * @param loc The location of the animal in the field.
      * @return The new animal.
      */
-    protected abstract Animal newAnimal(Boolean randomAge,Field field, Location loc);
+    protected abstract Animal newAnimal(Boolean randomAge,Field field, 
+        Location loc);
+        
+    /**
+     * 
+     */
+    public boolean isActive(){
+        return isAlive();
+    }
 }

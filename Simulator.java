@@ -25,11 +25,15 @@ public class Simulator
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;  
     // The probability that a cat will be created in any given grid position.
     private static final double CAT_CREATION_PROBABILITY = 0.01;
+    // The number of hunters in the field.
+    private static final int NUMBER_OF_HUNTERS = 5;
     // Decide if cats are included in the simulation.
     private final boolean withCats = false;
+    // Decide if hunters are include in the simulation.
+    private final boolean withHunters = true;
 
-    // List of animals in the field.
-    private List<Animal> animals;
+    // List of actors in the field.
+    private List<Actor> actors;
     // The current state of the field.
     private Field field;
     // The current step of the simulation.
@@ -59,7 +63,7 @@ public class Simulator
             width = DEFAULT_WIDTH;
         }
         
-        animals = new ArrayList<>();
+        actors = new ArrayList<>();
         field = new Field(depth, width);
 
         views = new ArrayList<>();
@@ -70,6 +74,9 @@ public class Simulator
         if (withCats){
             view.setColor(Cat.class, Color.RED);
         }
+        if (withHunters){
+            view.setColor(Hunter.class, Color.PINK);
+        }
         views.add(view);
         
         view = new GraphView(500, 150, 500);
@@ -77,6 +84,9 @@ public class Simulator
         view.setColor(Fox.class, Color.RED);
         if (withCats){
             view.setColor(Cat.class, Color.YELLOW);
+        }
+        if (withHunters){
+            view.setColor(Hunter.class, Color.PINK);
         }
         views.add(view);
 
@@ -116,18 +126,18 @@ public class Simulator
         step++;
 
         // Provide space for newborn animals.
-        List<Animal> newAnimals = new ArrayList<>();        
+        List<Actor> newAnimals = new ArrayList<>();        
         // Let all rabbits act.
-        for(Iterator<Animal> it = animals.iterator(); it.hasNext(); ) {
-            Animal animal = it.next();
+        for(Iterator<Actor> it = actors.iterator(); it.hasNext(); ) {
+            Actor animal = it.next();
             animal.act(newAnimals);
-            if(! animal.isAlive()) {
+            if(! animal.isActive()) {
                 it.remove();
             }
         }
                
         // Add the newly born foxes and rabbits to the main lists.
-        animals.addAll(newAnimals);
+        actors.addAll(newAnimals);
 
         updateViews();
     }
@@ -138,7 +148,7 @@ public class Simulator
     public void reset()
     {
         step = 0;
-        animals.clear();
+        actors.clear();
         for (SimulatorView view : views) {
             view.reset();
         }
@@ -169,17 +179,27 @@ public class Simulator
                 if(rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
                     Location location = new Location(row, col);
                     Fox fox = new Fox(true, field, location);
-                    animals.add(fox);
+                    actors.add(fox);
                 }
                 else if(rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
                     Location location = new Location(row, col);
                     Rabbit rabbit = new Rabbit(true, field, location);
-                    animals.add(rabbit);
+                    actors.add(rabbit);
                 }
                 else if(rand.nextDouble() <= CAT_CREATION_PROBABILITY && withCats) {
                     Location location = new Location(row, col);
                     Cat cat = new Cat(true, field, location);
-                    animals.add(cat);
+                    actors.add(cat);
+                }
+                else if (withHunters){
+                    long numberOfHunters = actors.stream()
+                        .filter(actor -> actor instanceof Hunter)
+                        .count();
+                    if (numberOfHunters <= NUMBER_OF_HUNTERS){
+                        Location location = new Location(row, col);
+                        Actor hunter = new Hunter(field, location);
+                        actors.add(hunter);
+                    }
                 }
                 // else leave the location empty.
             }

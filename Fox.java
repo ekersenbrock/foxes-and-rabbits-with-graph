@@ -59,7 +59,7 @@ public class Fox extends Animal
      * @param field The field currently occupied.
      * @param newFoxes A list to return newly born foxes.
      */
-    protected void act(List<Animal> newFoxes)
+    public void act(List<Actor> newFoxes)
     {
         incrementAge();
         incrementHunger();
