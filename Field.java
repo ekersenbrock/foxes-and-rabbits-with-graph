@@ -191,8 +191,8 @@ public class Field
      * @return Random location in field.
      */
     public Location getRandomLocation(){
-        int row = rand.nextInt(1 + getDepth());
-        int col = rand.nextInt(1 + getWidth());
+        int row = rand.nextInt(getDepth());
+        int col = rand.nextInt(getWidth());
         Location location = new Location(row, col);
         return location;
     }

@@ -195,7 +195,7 @@ public class Simulator
                     long numberOfHunters = actors.stream()
                         .filter(actor -> actor instanceof Hunter)
                         .count();
-                    if (numberOfHunters <= NUMBER_OF_HUNTERS){
+                    if (numberOfHunters < NUMBER_OF_HUNTERS){
                         Location location = new Location(row, col);
                         Actor hunter = new Hunter(field, location);
                         actors.add(hunter);
