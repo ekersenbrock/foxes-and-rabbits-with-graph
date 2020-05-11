@@ -35,7 +35,7 @@ public class Hunter implements Actor
     {
         isActive = true;
         this.field = field;
-        this.location = location;
+        setLocation(location);
         bagOfDeadAnimals = new ArrayList<>();
     }
 
@@ -67,17 +67,6 @@ public class Hunter implements Actor
         }
     }
     
-    // /**
-     // * Return a radom location in field.
-     // * @return Random location in field.
-     // */
-    // public Location getRandomLocation(){
-        // int row = rando.nextInt(1 + field.getDepth());
-        // int col = rando.nextInt(1 + field.getWidth());
-        // Location location = new Location(row, col);
-        // return location;
-    // }
-    
     /**
      * Returns the boolean value indicating if the hunter is still hunting.
      * @return Is the hunter still active.
@@ -90,7 +79,7 @@ public class Hunter implements Actor
      * Return the array that holds all the animals killed by this hunter.
      * @return The bagOfDeadAnimals array.
      */
-    public ArrayList<Actor> getbagOfDeadAnimals(){
+    public ArrayList<Actor> getBagOfDeadAnimals(){
         return bagOfDeadAnimals;
     }
 

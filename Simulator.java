@@ -1,4 +1,3 @@
-
 import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class Simulator
     private int step;
     // A graphical view of the simulation.
     private List<SimulatorView> views;
-    
+
     /**
      * Construct a simulation field with default size.
      */
@@ -48,7 +47,7 @@ public class Simulator
     {
         this(DEFAULT_DEPTH, DEFAULT_WIDTH);
     }
-    
+
     /**
      * Create a simulation field with the given size.
      * @param depth Depth of the field. Must be greater than zero.
@@ -62,12 +61,12 @@ public class Simulator
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-        
+
         actors = new ArrayList<>();
         field = new Field(depth, width);
 
         views = new ArrayList<>();
-        
+
         SimulatorView view = new GridView(depth, width);
         view.setColor(Rabbit.class, Color.ORANGE);
         view.setColor(Fox.class, Color.BLUE);
@@ -75,10 +74,10 @@ public class Simulator
             view.setColor(Cat.class, Color.RED);
         }
         if (withHunters){
-            view.setColor(Hunter.class, Color.PINK);
+            view.setColor(Hunter.class, Color.BLACK);
         }
         views.add(view);
-        
+
         view = new GraphView(500, 150, 500);
         view.setColor(Rabbit.class, Color.BLACK);
         view.setColor(Fox.class, Color.RED);
@@ -86,14 +85,14 @@ public class Simulator
             view.setColor(Cat.class, Color.YELLOW);
         }
         if (withHunters){
-            view.setColor(Hunter.class, Color.PINK);
+            view.setColor(Hunter.class, Color.BLUE);
         }
         views.add(view);
 
         // Setup a valid starting point.
         reset();
     }
-    
+
     /**
      * Run the simulation from its current state for a reasonably long period,
      * (4000 steps).
@@ -102,7 +101,7 @@ public class Simulator
     {
         simulate(4000);
     }
-    
+
     /**
      * Run the simulation from its current state for the given number of steps.
      * Stop before the given number of steps if it ceases to be viable.
@@ -115,7 +114,7 @@ public class Simulator
             // delay(60);   // uncomment this to run more slowly
         }
     }
-    
+
     /**
      * Run the simulation from its current state for a single step.
      * Iterate over the whole field updating the state of each
@@ -135,13 +134,13 @@ public class Simulator
                 it.remove();
             }
         }
-               
+
         // Add the newly born foxes and rabbits to the main lists.
         actors.addAll(newAnimals);
 
         updateViews();
     }
-        
+
     /**
      * Reset the simulation to a starting position.
      */
@@ -156,7 +155,7 @@ public class Simulator
         populate();
         updateViews();
     }
-    
+
     /**
      * Update all existing views.
      */
@@ -166,7 +165,7 @@ public class Simulator
             view.showStatus(step, field);
         }
     }
-    
+
     /**
      * Randomly populate the field with foxes and rabbits.
      */
@@ -191,21 +190,54 @@ public class Simulator
                     Cat cat = new Cat(true, field, location);
                     actors.add(cat);
                 }
-                else if (withHunters){
-                    long numberOfHunters = actors.stream()
-                        .filter(actor -> actor instanceof Hunter)
-                        .count();
-                    if (numberOfHunters < NUMBER_OF_HUNTERS){
-                        Location location = new Location(row, col);
-                        Actor hunter = new Hunter(field, location);
-                        actors.add(hunter);
-                    }
-                }
                 // else leave the location empty.
             }
         }
+        int numberOfHunters = 0;
+        while (numberOfHunters < NUMBER_OF_HUNTERS && withHunters){
+            Location location = field.getRandomLocation();
+            if (field.getObjectAt(location) == null){
+                Hunter hunter = new Hunter(field, location);
+                actors.add(hunter);
+                numberOfHunters++;
+            }
+        }
     }
-    
+
+    /**
+     * Check to see if any of the hunters killed any of the other hunters
+     * @return The number of hunters killed by each hunter.
+     */
+    public void whoKilledTheHunters(){
+        Object[] livingHunters = getLivingHunters();
+        for (int i = 0; i < livingHunters.length; i++){
+            Hunter hunter = (Hunter) livingHunters[i];
+            long deadHunters = hunter.getBagOfDeadAnimals().stream()
+                .filter(deadAnimal -> deadAnimal instanceof Hunter)
+                . count();
+            if (deadHunters == 1){
+                System.out.println("Hunter " + (i + 1) + " killed " + 
+                deadHunters + " other hunter");
+            }
+            else {
+                System.out.println("Hunter " + (i + 1) + " killed " + 
+                deadHunters + " other hunters");
+            }
+        }
+    }
+
+    /**
+     * Get a fixed size array containing the hunters that haven't been 
+     * hunted.
+     * @retunr An array containing the remaining hunter objects.
+     */
+    private Object[] getLivingHunters(){
+        Object[] livingHunters = actors.stream()
+            .filter(actor -> actor instanceof Hunter)
+            .toArray();
+        return livingHunters;
+    }
+
     /**
      * Pause for a given time.
      * @param millisec  The time to pause for, in milliseconds
