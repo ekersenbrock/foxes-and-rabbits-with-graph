@@ -21,10 +21,6 @@ public abstract class Animal implements Actor
     private int age;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
-    // The likelihood of a rabbit breeding.
-    private static final double BREEDING_PROBABILITY = 0;
-    // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 0;
     
     /**
      * Create a new animal at location in field.
@@ -105,9 +101,7 @@ public abstract class Animal implements Actor
     /**
      * Get the breeding age of an animal
      */
-    protected int getBreedingAge(){
-        return breedingAge;
-    }
+    protected abstract int getBreedingAge();
     
     /**
      * An animal can breed if it has reached the breeding age.

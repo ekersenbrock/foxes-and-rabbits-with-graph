@@ -8,10 +8,12 @@ import java.util.Random;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Cat extends Animal
+public class Cat extends Animal 
 {
     // Characteristics shared by all cats (class variables).
 
+    // The age a cat can start to breed.
+    private static final int BREEDING_AGE = 15;
     // The age to which a cat can live.
     private static final int MAX_AGE = 210;
     // The likelihood of a cat breeding.
@@ -40,7 +42,6 @@ public class Cat extends Animal
     public Cat(boolean randomAge, Field field, Location location)
     {
         super(field, location);
-        setBreedingAge(15);
         if(randomAge) {
             setAge(rand.nextInt(MAX_AGE));
             foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
@@ -157,5 +158,9 @@ public class Cat extends Animal
      */
     protected Cat newAnimal(Boolean randomAge,Field field, Location loc){
         return new Cat(false, field, loc);
+    }
+    
+    protected int getBreedingAge(){
+        return BREEDING_AGE;
     }
 }

@@ -13,6 +13,8 @@ public class Fox extends Animal
 {
     // Characteristics shared by all foxes (class variables).
 
+    // The age a fox can start to breed.
+    private static final int BREEDING_AGE = 15;
     // The age to which a fox can live.
     private static final int MAX_AGE = 150;
     // The likelihood of a fox breeding.
@@ -41,7 +43,6 @@ public class Fox extends Animal
     public Fox(boolean randomAge, Field field, Location location)
     {
         super(field, location);
-        setBreedingAge(15);
         if(randomAge) {
             setAge(rand.nextInt(MAX_AGE));
             foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
@@ -118,28 +119,9 @@ public class Fox extends Animal
         return null;
     }
     
-    // /**
-     // * Check whether or not this fox is to give birth at this step.
-     // * New births will be made into free adjacent locations.
-     // * @param newFoxes A list to return newly born foxes.
-     // */
-    // protected void giveBirth(List<Animal> newFoxes)
-    // {
-        // // New foxes are born into adjacent locations.
-        // // Get a list of adjacent free locations.
-        // // Field field = getField();
-        // // List<Location> free = field.getFreeAdjacentLocations(getLocation());
-        // // int births = breed();
-        // // for(int b = 0; b < births && free.size() > 0; b++) {
-            // // Location loc = free.remove(0);
-            // // Fox young = new Fox(false, field, loc);
-            // // newFoxes.add(young);
-        // // }
-    // }
-    
     /**
      * Returns a new fox.
-     * @param randomAge Decide of the fox is at the beginning of life.
+     * @param randomAge Decide if the fox is at the beginning of life.
      * @param field The field the fox is in.
      * @param loc The location of the fox in the field.
      * @return The new fox.
@@ -170,5 +152,9 @@ public class Fox extends Animal
      */
     protected int getMaxLitterSize(){
         return MAX_LITTER_SIZE;
+    }
+    
+    protected int getBreedingAge(){
+        return BREEDING_AGE;
     }
 }

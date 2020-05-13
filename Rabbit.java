@@ -12,6 +12,8 @@ public class Rabbit extends Animal
 {
     // Characteristics shared by all rabbits (class variables).
 
+    // The age a rabbit can begin to breed.
+    private static final int BREEDING_AGE = 5;
     // The age to which a rabbit can live.
     private static final int MAX_AGE = 40;
     // The likelihood of a rabbit breeding.
@@ -32,7 +34,6 @@ public class Rabbit extends Animal
     public Rabbit(boolean randomAge, Field field, Location location)
     {
         super(field, location);
-        setBreedingAge(5);
         if(randomAge) {
             setAge(rand.nextInt(MAX_AGE));
         }
@@ -59,25 +60,6 @@ public class Rabbit extends Animal
             }
         }
     }
-    
-    // /**
-     // * Check whether or not this rabbit is to give birth at this step.
-     // * New births will be made into free adjacent locations.
-     // * @param newRabbits A list to return newly born rabbits.
-     // */
-    // private void giveBirth(List<Animal> newRabbits)
-    // {
-        // // New rabbits are born into adjacent locations.
-        // // Get a list of adjacent free locations.
-        // Field field = getField();
-        // List<Location> free = field.getFreeAdjacentLocations(getLocation());
-        // int births = breed(); 
-        // for(int b = 0; b < births && free.size() > 0; b++) {
-            // Location loc = free.remove(0);
-            // Rabbit young = new Rabbit(false, field, loc);
-            // newRabbits.add(young);
-        // }
-    // }
     
     /**
      * Returns the max age of this animal.
@@ -112,5 +94,9 @@ public class Rabbit extends Animal
      */
     protected Rabbit newAnimal(Boolean randomAge,Field field, Location loc){
         return new Rabbit(false, field, loc);
+    }
+    
+    protected int getBreedingAge(){
+        return BREEDING_AGE;
     }
 }
