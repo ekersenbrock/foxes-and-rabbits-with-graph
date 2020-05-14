@@ -14,31 +14,17 @@ import java.awt.Color;
 public class Simulator
 {
     // Constants representing configuration information for the simulation.
+    
     // The default width for the grid.
     private static final int DEFAULT_WIDTH = 120;
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 80;
-    // The probability that a fox will be created in any given grid position.
-    private static final double FOX_CREATION_PROBABILITY = 0.02;
-    // The probability that a rabbit will be created in any given grid position.
-    private static final double RABBIT_CREATION_PROBABILITY = 0.08;  
-    // The probability that a cat will be created in any given grid position.
-    private static final double CAT_CREATION_PROBABILITY = 0.01;
-    // The number of hunters in the field.
-    private static final int NUMBER_OF_HUNTERS = 5;
-    // Decide if cats are included in the simulation.
-    private final boolean withCats = false;
-    // Decide if hunters are include in the simulation.
-    private final boolean withHunters = true;
-
-    // List of actors in the field.
-    private List<Actor> actors;
-    // The current state of the field.
-    private Field field;
     // The current step of the simulation.
     private int step;
     // A graphical view of the simulation.
     private List<SimulatorView> views;
+    // Generates actors, holds actors List and field.
+    private PopulationGenerator popGen;
 
     /**
      * Construct a simulation field with default size.
@@ -61,34 +47,20 @@ public class Simulator
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-
-        actors = new ArrayList<>();
-        field = new Field(depth, width);
-
+        
+        // An array to hold the different simulator views.
         views = new ArrayList<>();
-
+        // Creates the grid view with desired size.
         SimulatorView view = new GridView(depth, width);
-        view.setColor(Rabbit.class, Color.ORANGE);
-        view.setColor(Fox.class, Color.BLUE);
-        if (withCats){
-            view.setColor(Cat.class, Color.RED);
-        }
-        if (withHunters){
-            view.setColor(Hunter.class, Color.BLACK);
-        }
         views.add(view);
-
+        // Creates the graph view with desired size.
         view = new GraphView(500, 150, 500);
-        view.setColor(Rabbit.class, Color.BLACK);
-        view.setColor(Fox.class, Color.RED);
-        if (withCats){
-            view.setColor(Cat.class, Color.YELLOW);
-        }
-        if (withHunters){
-            view.setColor(Hunter.class, Color.BLUE);
-        }
         views.add(view);
-
+        
+        // Instantiates the field to pass into the new population generator.
+        Field field = new Field(depth, width);
+        popGen = new PopulationGenerator(field, views);
+        
         // Setup a valid starting point.
         reset();
     }
@@ -109,7 +81,9 @@ public class Simulator
      */
     public void simulate(int numSteps)
     {
-        for(int step = 1; step <= numSteps && views.get(0).isViable(field); step++) {
+        for(int step = 1; 
+                step <= numSteps && views.get(0).isViable(popGen.getField()); 
+                step++) {
             simulateOneStep();
             // delay(60);   // uncomment this to run more slowly
         }
@@ -125,18 +99,20 @@ public class Simulator
         step++;
 
         // Provide space for newborn animals.
-        List<Actor> newAnimals = new ArrayList<>();        
-        // Let all rabbits act.
-        for(Iterator<Actor> it = actors.iterator(); it.hasNext(); ) {
-            Actor animal = it.next();
-            animal.act(newAnimals);
-            if(! animal.isActive()) {
+        List<Actor> newActors = new ArrayList<>(); 
+        // Create an iterator to remove inactive actors.
+        Iterator<Actor> it = popGen.getActors().iterator();
+        // Let all actors act.
+        while(it.hasNext()) {
+            Actor actor = it.next();
+            actor.act(newActors); 
+            if(! actor.isActive()) {
                 it.remove();
             }
         }
 
-        // Add the newly born foxes and rabbits to the main lists.
-        actors.addAll(newAnimals);
+        // Add the newly born animals to the main lists.
+        popGen.addActors(newActors);
 
         updateViews();
     }
@@ -147,12 +123,12 @@ public class Simulator
     public void reset()
     {
         step = 0;
-        actors.clear();
+        popGen.clearListOfActors(); 
         for (SimulatorView view : views) {
             view.reset();
         }
 
-        populate();
+        popGen.populate();
         updateViews();
     }
 
@@ -162,45 +138,7 @@ public class Simulator
     private void updateViews()
     {
         for (SimulatorView view : views) {
-            view.showStatus(step, field);
-        }
-    }
-
-    /**
-     * Randomly populate the field with foxes and rabbits.
-     */
-    private void populate()
-    {
-        Random rand = Randomizer.getRandom();
-        field.clear();
-        for(int row = 0; row < field.getDepth(); row++) {
-            for(int col = 0; col < field.getWidth(); col++) {
-                if(rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
-                    Location location = new Location(row, col);
-                    Fox fox = new Fox(true, field, location);
-                    actors.add(fox);
-                }
-                else if(rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
-                    Location location = new Location(row, col);
-                    Rabbit rabbit = new Rabbit(true, field, location);
-                    actors.add(rabbit);
-                }
-                else if(rand.nextDouble() <= CAT_CREATION_PROBABILITY && withCats) {
-                    Location location = new Location(row, col);
-                    Cat cat = new Cat(true, field, location);
-                    actors.add(cat);
-                }
-                // else leave the location empty.
-            }
-        }
-        int numberOfHunters = 0;
-        while (numberOfHunters < NUMBER_OF_HUNTERS && withHunters){
-            Location location = field.getRandomLocation();
-            if (field.getObjectAt(location) == null){
-                Hunter hunter = new Hunter(field, location);
-                actors.add(hunter);
-                numberOfHunters++;
-            }
+            view.showStatus(step, popGen.getField());
         }
     }
 
@@ -209,33 +147,7 @@ public class Simulator
      * @return The number of hunters killed by each hunter.
      */
     public void whoKilledTheHunters(){
-        Object[] livingHunters = getLivingHunters();
-        for (int i = 0; i < livingHunters.length; i++){
-            Hunter hunter = (Hunter) livingHunters[i];
-            long deadHunters = hunter.getBagOfDeadAnimals().stream()
-                .filter(deadAnimal -> deadAnimal instanceof Hunter)
-                . count();
-            if (deadHunters == 1){
-                System.out.println("Hunter " + (i + 1) + " killed " + 
-                deadHunters + " other hunter");
-            }
-            else {
-                System.out.println("Hunter " + (i + 1) + " killed " + 
-                deadHunters + " other hunters");
-            }
-        }
-    }
-
-    /**
-     * Get a fixed size array containing the hunters that haven't been 
-     * hunted.
-     * @retunr An array containing the remaining hunter objects.
-     */
-    private Object[] getLivingHunters(){
-        Object[] livingHunters = actors.stream()
-            .filter(actor -> actor instanceof Hunter)
-            .toArray();
-        return livingHunters;
+        popGen.whoKilledTheHunters();
     }
 
     /**
