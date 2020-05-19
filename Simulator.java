@@ -163,4 +163,8 @@ public class Simulator
             // wake up
         }
     }
+    
+    public void countKills(){
+        popGen.countKills();
+    }
 }

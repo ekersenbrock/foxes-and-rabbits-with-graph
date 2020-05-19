@@ -119,4 +119,37 @@ public class Hunter implements Actor
     public void setDead(){
         isActive = false;
     }
+    
+    /**
+     * Return the field object that this hunter occupies.
+     */
+    public Field getField(){ 
+        return field;
+    }
+    
+    /**
+     * Return the number of rabbits this hunter has killed.
+     * @return The number of dead rabbits.
+     */
+    public int howManyRabbits(){
+        return (int) bagOfDeadAnimals.stream()
+            .filter(a -> a instanceof Rabbit)
+            .count();
+    }
+    
+    /**
+     * Return the number of foxes this hunter has killed.
+     * @return The number of dead foxes.
+     */
+    public int howManyFoxes(){
+        return (int) bagOfDeadAnimals.stream()
+            .filter(a -> a instanceof Fox)
+            .count();
+    }
+    
+    public int howManyHunters(){
+        return (int) bagOfDeadAnimals.stream()
+                .filter(deadAnimal -> deadAnimal instanceof Hunter)
+                . count();
+    }
 }

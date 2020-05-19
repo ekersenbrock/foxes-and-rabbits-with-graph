@@ -171,4 +171,17 @@ public class PopulationGenerator
             }
         }
     }
+    
+    /**
+     * How many of each animal did the hunters kill.
+     */
+    public void countKills(){
+        Hunter[] hunters = (Hunter[]) getLivingHunters();
+        for (int i = 0; i < hunters.length; i++){
+            System.out.println("Hunter " + (i + 1) + " killed " + 
+            hunters[i].howManyRabbits() + " rabbits, " + 
+            hunters[i].howManyFoxes() + " foxes and " + 
+            hunters[i].howManyHunters() + " hunters.");
+        }
+    }
 }

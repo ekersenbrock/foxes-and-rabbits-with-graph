@@ -85,7 +85,7 @@ public abstract class Animal implements Actor
      * Return the animal's field.
      * @return The animal's field.
      */
-    protected Field getField()
+    public Field getField()
     {
         return field;
     }

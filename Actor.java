@@ -25,4 +25,9 @@ public interface Actor
      * Kills the thing.
      */
     void setDead();
+    
+    /**
+     * Returns the field that the actor occupies.
+     */
+    Field getField();
 }
